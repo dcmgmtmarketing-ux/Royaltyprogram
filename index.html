@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Share Your Experience | DC CLEAN</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1f44;
+    --navy-mid: #1a3460;
+    --navy-light: #e8edf5;
+    --accent: #1a6eb5;
+    --accent-light: #e8f0fb;
+    --white: #ffffff;
+    --text: #0a1f44;
+    --muted: #6b7280;
+    --border: #dde3ed;
+    --red: #e53e3e;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: linear-gradient(160deg, #f0f4fb 0%, #e8edf8 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    top: -120px; right: -120px;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(10,31,68,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -100px; left: -100px;
+    width: 350px; height: 350px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(26,110,181,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* CONFETTI */
+  .confetti-container {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 999;
+    overflow: hidden;
+  }
+  .confetti-piece {
+    position: absolute;
+    top: -10px;
+    opacity: 1;
+    animation: confettiFall linear forwards;
+  }
+  @keyframes confettiFall {
+    0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* GIFT SHAKE */
+  .shake {
+    animation: giftShake 0.4s ease-in-out infinite !important;
+  }
+  @keyframes giftShake {
+    0%,100% { transform: rotate(-12deg) scale(1.1); }
+    50%      { transform: rotate(12deg) scale(1.2); }
+  }
+
+  /* BOTTLE REVEAL */
+  .bottle-reveal {
+    animation: bottleReveal 0.6s cubic-bezier(.22,.68,0,1.4) both;
+  }
+  @keyframes bottleReveal {
+    from { opacity:0; transform: scale(0.3) rotate(-10deg); }
+    to   { opacity:1; transform: scale(1) rotate(0deg); }
+  }
+
+  .card {
+    background: var(--white);
+    border-radius: 24px;
+    box-shadow: 0 8px 40px rgba(10,31,68,0.13);
+    width: 100%;
+    max-width: 440px;
+    overflow: hidden;
+    animation: slideUp 0.5s cubic-bezier(.22,.68,0,1.2) both;
+  }
+  @keyframes slideUp {
+    from { opacity:0; transform: translateY(30px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+
+  /* HEADER */
+  .card-header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--accent) 100%);
+    padding: 32px 32px 28px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .card-header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+  }
+  .card-header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: -40px;
+    width: 150px; height: 150px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+
+  .logo-wrap {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+  .logo-img {
+    width: 56px; height: 56px;
+    border-radius: 14px;
+    object-fit: contain;
+    background: #ffffff;
+    padding: 6px;
+    border: 1.5px solid rgba(255,255,255,0.6);
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0px); }
+    50%      { transform: translateY(-6px); }
+  }
+  .logo-text { text-align: left; }
+  .logo-text .brand { color: #fff; font-size: 18px; font-weight: 800; line-height: 1.1; }
+  .logo-text .tagline { color: rgba(255,255,255,0.65); font-size: 11px; font-weight: 500; }
+
+  .star-row {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 12px;
+    position: relative;
+    z-index: 1;
+  }
+  .star-row span { font-size: 22px; animation: starPop 0.4s cubic-bezier(.22,.68,0,1.4) both; }
+  .star-row span:nth-child(1) { animation-delay: 0.05s; }
+  .star-row span:nth-child(2) { animation-delay: 0.10s; }
+  .star-row span:nth-child(3) { animation-delay: 0.15s; }
+  .star-row span:nth-child(4) { animation-delay: 0.20s; }
+  .star-row span:nth-child(5) { animation-delay: 0.25s; }
+  @keyframes starPop {
+    from { opacity:0; transform: scale(0.4); }
+    to   { opacity:1; transform: scale(1); }
+  }
+  .card-header h1 { color: #fff; font-size: 20px; font-weight: 800; line-height: 1.3; position: relative; z-index: 1; margin-bottom: 6px; }
+  .card-header p { color: rgba(255,255,255,0.75); font-size: 13px; line-height: 1.5; position: relative; z-index: 1; }
+
+  /* AWARDS */
+  .awards-strip {
+    background: var(--navy-light);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .award-item { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; color: var(--navy); }
+  .award-img { width: 65px; height: 65px; object-fit: contain; animation: float 3s ease-in-out infinite; }
+  .award-divider { width: 1px; height: 28px; background: var(--border); }
+
+  .card-body { padding: 28px 32px; }
+  .card-body::after {
+    content: '© 2025 DC Clean. All Rights Reserved.';
+    display: block;
+    text-align: center;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 20px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* FORM */
+  .form-group { margin-bottom: 16px; }
+  label { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 7px; }
+  input[type="text"], input[type="tel"] {
+    width: 100%;
+    padding: 13px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 15px;
+    color: var(--text);
+    background: #f8f9fc;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    outline: none;
+  }
+  input:focus { border-color: var(--accent); background: var(--white); box-shadow: 0 0 0 3px rgba(26,110,181,0.10); }
+  .select-wrap { position: relative; }
+  .select-wrap select {
+    width: 100%;
+    padding: 13px 40px 13px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 15px;
+    color: var(--text);
+    background: #f8f9fc;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+  }
+  .select-wrap select:focus { border-color: var(--accent); background: var(--white); box-shadow: 0 0 0 3px rgba(26,110,181,0.10); }
+  .select-wrap select option { color: var(--text); background: #fff; }
+  .select-wrap::after {
+    content: '';
+    position: absolute;
+    right: 16px; top: 50%;
+    transform: translateY(-50%);
+    width: 0; height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid var(--muted);
+    pointer-events: none;
+  }
+  .error-msg { color: var(--red); font-size: 12px; margin-top: 5px; display: none; }
+  .error-msg.show { display: block; }
+
+  /* T&C Modal */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,31,68,0.55);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: #fff;
+    border-radius: 20px;
+    padding: 28px 24px;
+    max-width: 400px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 12px 48px rgba(10,31,68,0.2);
+    animation: slideUp 0.3s ease both;
+  }
+  .modal-box h3 { font-size: 17px; font-weight: 800; color: var(--navy); margin-bottom: 16px; }
+  .modal-box ul { padding-left: 18px; }
+  .modal-box li { font-size: 13px; color: #111827; line-height: 1.7; margin-bottom: 6px; }
+  .modal-close {
+    width: 100%;
+    margin-top: 20px;
+    padding: 13px;
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .modal-close:disabled { opacity: 0.45; cursor: not-allowed; }
+
+  .btn-primary {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--accent) 100%);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    margin-top: 4px;
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(10,31,68,0.25); }
+
+  /* REVIEW PAGE */
+  .review-step { text-align: center; }
+  .icon-wrap {
+    width: 68px; height: 68px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--navy-light), var(--accent-light));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px;
+    margin: 0 auto 18px;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(10,31,68,0.12); }
+    50%      { box-shadow: 0 0 0 10px rgba(10,31,68,0); }
+  }
+  .review-step h2 { font-size: 20px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+  .review-step > p { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 18px; }
+  .customer-tag {
+    display: inline-block;
+    background: var(--navy-light);
+    color: var(--navy);
+    font-weight: 700;
+    font-size: 13px;
+    padding: 5px 14px;
+    border-radius: 30px;
+    margin-bottom: 18px;
+  }
+  .steps-hint { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 22px; }
+  .step-dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+  .step-dot.done { background: var(--navy); color: #fff; }
+  .step-dot.active { background: var(--accent); color: #fff; }
+  .step-dot.pending { background: var(--border); color: var(--muted); }
+  .step-line { width: 24px; height: 2px; background: var(--border); border-radius: 1px; }
+  .step-line.done { background: var(--navy); }
+
+  .btn-google-main {
+    width: 100%;
+    padding: 15px;
+    background: #fff;
+    color: var(--text);
+    border: 2px solid var(--accent);
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+    margin-bottom: 14px;
+  }
+  .btn-google-main:hover { background: var(--accent-light); box-shadow: 0 4px 16px rgba(26,110,181,0.15); transform: translateY(-1px); }
+  .google-g { width: 20px; height: 20px; flex-shrink: 0; }
+
+  .btn-done {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--accent) 100%);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s, opacity 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-done:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(10,31,68,0.28); }
+  .btn-done:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+  .btn-progress {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 0%;
+    background: rgba(255,255,255,0.15);
+    transition: width 1s linear;
+    border-radius: 12px;
+  }
+  .lock-hint { font-size: 12px; color: var(--muted); margin-top: 10px; min-height: 18px; text-align: center; transition: color 0.3s; }
+  .lock-hint.unlocked { color: var(--navy); font-weight: 700; }
+
+  /* CONFIRM */
+  .confirm-step { text-align: center; }
+  .confirm-step .big-icon { font-size: 54px; margin-bottom: 12px; animation: bounceIn 0.5s cubic-bezier(.22,.68,0,1.4) both; }
+  @keyframes bounceIn {
+    from { opacity:0; transform: scale(0.3); }
+    to   { opacity:1; transform: scale(1); }
+  }
+  .confirm-step h2 { font-size: 21px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+  .confirm-step > p { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 22px; }
+  .notify-box { background: var(--navy-light); border-radius: 14px; padding: 18px 20px; margin-bottom: 22px; text-align: left; border: 1px solid var(--border); }
+  .nb-title { font-size: 11px; font-weight: 700; color: var(--navy); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
+  .nb-row { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; color: var(--text); margin-bottom: 5px; }
+  .nb-row span:first-child { color: var(--muted); min-width: 70px; font-weight: 500; }
+  .nb-row span:last-child { font-weight: 600; }
+  .btn-wa {
+    width: 100%;
+    padding: 15px;
+    background: #25d366;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .btn-wa:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37,211,102,0.32); }
+
+  /* THANK YOU */
+  .thanks-step { text-align: center; }
+  .thanks-step h2 { font-size: 22px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+  .thanks-step > p { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 20px; }
+  .promo-box {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--accent) 100%);
+    border-radius: 16px;
+    padding: 20px;
+    color: #fff;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .promo-box::before { content: ''; position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; border-radius: 50%; background: rgba(255,255,255,0.06); }
+  .promo-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.75; margin-bottom: 6px; }
+  .promo-text { font-size: 15px; font-weight: 800; line-height: 1.5; position: relative; z-index: 1; }
+
+  /* POSTER */
+  .poster-wrap { margin-bottom: 20px; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 20px rgba(10,31,68,0.12); }
+  .poster-img { width: 100%; display: block; animation: float 4s ease-in-out infinite; }
+
+  /* SOCIAL */
+  .social-links { display: flex; justify-content: center; gap: 12px; margin-bottom: 20px; }
+  .social-btn {
+    display: flex; flex-direction: column; align-items: center; gap: 5px;
+    text-decoration: none; padding: 10px 14px; border-radius: 12px;
+    border: 1.5px solid var(--border); background: #f8f9fc;
+    transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+    min-width: 64px;
+  }
+  .social-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(10,31,68,0.1); }
+  .social-btn svg { width: 22px; height: 22px; }
+  .social-btn span { font-size: 10px; font-weight: 700; color: var(--muted); }
+  .social-btn.fb:hover { border-color: #1877f2; }
+  .social-btn.tt:hover { border-color: #000; }
+  .social-btn.yt:hover { border-color: #ff0000; }
+  .social-btn.web:hover { border-color: var(--navy); }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
+  .footer-note { font-size: 12px; color: var(--muted); text-align: center; line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<div class="confetti-container" id="confetti-container"></div>
+
+<!-- T&C MODAL -->
+<div class="modal-overlay" id="tnc-modal">
+  <div class="modal-box">
+    <h3>📋 Terms & Conditions</h3>
+    <ul>
+      <li>This review campaign is open to all customers who have used DC Clean services.</li>
+      <li>You must leave a 5-STAR review on Google before claiming your reward.</li>
+      <li>You are required to upload a picture of your review and mention the worker's name who served you.</li>
+      <li>Each customer is entitled to one (1) free floor cleaner per review submission.</li>
+      <li>This offer is valid while stocks last and cannot be exchanged for cash.</li>
+      <li>Your personal information (name & phone number) is collected solely for record purposes and will not be shared with third parties.</li>
+      <li>DC Clean reserves the right to verify the authenticity of submitted reviews.</li>
+      <li>Fake or incentivised reviews that violate Google's policies are strictly prohibited.</li>
+    </ul>
+    <button class="modal-close" id="btn-modal-close" onclick="closeModalAndProceed()" disabled>
+      <span id="btn-modal-label">Please read... (10)</span>
+    </button>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div class="logo-wrap">
+      <img src="logo.png" alt="DC Clean Logo" class="logo-img" onerror="this.style.display='none'">
+      <div class="logo-text">
+        <div class="brand">DC CLEAN</div>
+        <div class="tagline">Professional Cleaning Services</div>
+      </div>
+    </div>
+    <div class="star-row">
+      <span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span>
+    </div>
+    <h1>Share Your Experience!</h1>
+    <p>Your feedback means the world to us 🙏</p>
+  </div>
+
+  <div class="awards-strip">
+    <div class="award-item">
+      <img src="award1.png" alt="Award 1" class="award-img" onerror="this.parentElement.innerHTML='🏆'">
+    </div>
+    <div class="award-divider"></div>
+    <div class="award-item">
+      <img src="award2.png" alt="Award 2" class="award-img" onerror="this.parentElement.innerHTML='🥇'">
+    </div>
+    <div class="award-divider"></div>
+    <div class="award-item">
+      <img src="award3.png" alt="Award 3" class="award-img" onerror="this.parentElement.innerHTML='⭐'">
+    </div>
+    <div class="award-divider"></div>
+    <div class="award-item">
+      <img src="award4.png" alt="Award 4" class="award-img" onerror="this.parentElement.innerHTML='🏅'">
+    </div>
+  </div>
+
+  <div class="card-body">
+
+    <!-- PAGE 0: WELCOME -->
+    <div class="page active" id="page-welcome">
+      <div class="thanks-step">
+        <div class="poster-wrap">
+          <img src="poster.png" alt="DC Clean Promotion" class="poster-img" onerror="this.parentElement.style.display='none'">
+        </div>
+        <h2>Get Your Free Floor Cleaner! 🎁</h2>
+        <p>Leave us a Google Review and claim your free gift today.</p>
+        <hr class="divider">
+        <button class="btn-primary" onclick="openModal(event)">Read Terms & Continue →</button>
+      </div>
+    </div>
+
+    <!-- PAGE 1: FORM -->
+    <div class="page" id="page-form">
+      <div class="form-group">
+        <label for="inp-name">Full Name</label>
+        <input type="text" id="inp-name" placeholder="e.g. John Smith" autocomplete="off">
+        <div class="error-msg" id="err-name">Please enter your name.</div>
+      </div>
+      <div class="form-group">
+        <label for="inp-phone">Phone Number</label>
+        <input type="tel" id="inp-phone" placeholder="e.g. 0123456789" autocomplete="off">
+        <div class="error-msg" id="err-phone">Please enter a valid phone number.</div>
+      </div>
+      <div class="form-group">
+        <label for="inp-branch">Branch</label>
+        <div class="select-wrap">
+          <select id="inp-branch">
+            <option value="">-- Select a branch --</option>
+            <option value="Kurina">Kurina</option>
+            <option value="DC Clean">DC Clean</option>
+            <option value="Hawkyz">Hawkyz</option>
+          </select>
+        </div>
+        <div class="error-msg" id="err-branch">Please select your branch.</div>
+      </div>
+      <button class="btn-primary" onclick="submitForm()">Next →</button>
+      <hr class="divider">
+      <p class="footer-note">Your information is used for internal records only.</p>
+    </div>
+
+    <!-- PAGE 2: REVIEW -->
+    <div class="page" id="page-review">
+      <div class="review-step">
+        <div class="icon-wrap">⭐</div>
+        <div class="customer-tag" id="tag-name"></div>
+        <h2>Leave Your Review</h2>
+        <p>Tap the button below, leave a review on Google, then come back here.</p>
+        <div class="steps-hint">
+          <div class="step-dot done">1</div>
+          <div class="step-line done"></div>
+          <div class="step-dot active" id="sdot-review">2</div>
+          <div class="step-line" id="sline-2"></div>
+          <div class="step-dot pending" id="sdot-confirm">3</div>
+        </div>
+        <button class="btn-google-main" id="btn-open-review" onclick="openReview()">
+          <svg class="google-g" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+          </svg>
+          <span id="btn-review-label">Open Google Review</span>
+        </button>
+        <button class="btn-done" id="btn-done" onclick="goToConfirm()" disabled>
+          <div class="btn-progress" id="btn-progress"></div>
+          <span id="btn-done-label">✅ I've left a review!</span>
+        </button>
+        <p class="lock-hint" id="lock-hint">Open Google Review first to continue</p>
+        <hr class="divider">
+        <p class="footer-note">Google Review will open in a new tab. Come back here once done.</p>
+      </div>
+    </div>
+
+    <!-- PAGE 3: CONFIRM -->
+    <div class="page" id="page-confirm">
+      <div class="confirm-step">
+        <div class="big-icon">🎉</div>
+        <h2>Almost done!</h2>
+        <p>Tap the button below to notify our team. This step is <strong>required</strong> to confirm your record.</p>
+        <div class="notify-box">
+          <div class="nb-title">📋 Summary</div>
+          <div class="nb-row"><span>Name:</span><span id="sum-name">—</span></div>
+          <div class="nb-row"><span>Phone:</span><span id="sum-phone">—</span></div>
+          <div class="nb-row"><span>Branch:</span><span id="sum-branch">—</span></div>
+        </div>
+        <button class="btn-wa" onclick="notifyPIC()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" fill="white"/>
+            <path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.832-1.438A9.955 9.955 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z" fill="white" fill-opacity="0.25"/>
+          </svg>
+          Notify Our Team
+        </button>
+      </div>
+    </div>
+
+    <!-- PAGE 4: THANK YOU -->
+    <div class="page" id="page-thanks">
+      <div class="thanks-step">
+        <div style="text-align:center;cursor:pointer;" onclick="explodeGift()">
+          <div class="big-icon" id="gift-trigger" style="cursor:pointer;">🎁</div>
+          <p style="font-size:13px;font-weight:700;color:var(--accent);margin-top:4px;animation:pulse 1.5s ease-in-out infinite;">👆 Tap me!</p>
+        </div>
+        <h2>You're Amazing!</h2>
+        <p>You've just unlocked a FREE Floor Cleaner worth <strong>RM30</strong>! 🎉 Thank you for supporting us!</p>
+        <div class="promo-box">
+          <div class="promo-label">🎁 Special Reward</div>
+          <div class="promo-text">Show this screen to your respective PIC and claim your floor cleaner for free!</div>
+        </div>
+        <div style="background:var(--navy-light);border-radius:12px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:var(--navy);font-weight:600;text-align:center;border:1.5px dashed var(--accent);">
+          💰 Follow all our socials & get an <strong>extra mystery gift</strong> on your next order!
+        </div>
+        <div class="social-links">
+          <a href="https://www.facebook.com/dccleanservicemelaka" target="_blank" class="social-btn fb">
+            <svg viewBox="0 0 24 24" fill="#1877f2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            <span>Facebook</span>
+          </a>
+          <a href="https://www.tiktok.com/@dc.clean1" target="_blank" class="social-btn tt">
+            <svg viewBox="0 0 24 24" fill="#000"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.78a4.85 4.85 0 01-1.01-.09z"/></svg>
+            <span>TikTok</span>
+          </a>
+          <a href="https://www.youtube.com/@dcclean4333" target="_blank" class="social-btn yt">
+            <svg viewBox="0 0 24 24" fill="#ff0000"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+            <span>YouTube</span>
+          </a>
+          <a href="https://www.dc-cleaning.com.my" target="_blank" class="social-btn web">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#0a1f44" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+            <span>Website</span>
+          </a>
+        </div>
+        <hr class="divider">
+        <p class="footer-note">We appreciate your trust. See you again! 😊</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const GOOGLE_REVIEW_URL = "https://search.google.com/local/writereview?placeid=ChIJr6iskxvx0TERqQmAelCupGA&source=g.page.m._&utm_source=gbp&laa=merchant-review-solicitation";
+  const BRANCHES = {
+    "Kurina":   { pic: "60166614899" },
+    "DC Clean": { pic: "60127313433" },
+    "Hawkyz":   { pic: "60127514332" }
+  };
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyykY1edGt4PdKhu71d1RSXRlmZSAgmb4TDCEdrCOOLA5ISaqkT-CYrEMGl0D1OsEdv/exec";
+  const WAIT_SECONDS = 30;
+
+  let customerData = { name: "", phone: "", branch: "" };
+  let reviewOpened = false;
+  let timerInterval = null;
+  let giftOpened = false;
+
+  // ── MODAL ──────────────────────────────────────────
+  function openModal(e) {
+    e.preventDefault();
+    document.getElementById('tnc-modal').classList.add('open');
+    startModalTimer();
+  }
+
+  function startModalTimer() {
+    let remaining = 10;
+    const btn   = document.getElementById('btn-modal-close');
+    const label = document.getElementById('btn-modal-label');
+    btn.disabled = true;
+    label.textContent = `Please read... (${remaining})`;
+
+    const t = setInterval(() => {
+      remaining--;
+      if (remaining > 0) {
+        label.textContent = `Please read... (${remaining})`;
+      } else {
+        clearInterval(t);
+        btn.disabled = false;
+        label.textContent = 'I Understand ✓';
+      }
+    }, 1000);
+  }
+
+  function closeModalAndProceed() {
+    document.getElementById('tnc-modal').classList.remove('open');
+    showPage('page-form');
+  }
+
+  // ── NAVIGATION ─────────────────────────────────────
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── FORM ───────────────────────────────────────────
+  function submitForm() {
+    const name   = document.getElementById('inp-name').value.trim();
+    const phone  = document.getElementById('inp-phone').value.trim();
+    const branch = document.getElementById('inp-branch').value;
+
+    const phoneClean = phone.replace(/[\s\-]/g, '');
+    const phoneValid = /^(\+?60|0)[0-9]{8,11}$/.test(phoneClean);
+
+    document.getElementById('err-name').classList.toggle('show', !name);
+    document.getElementById('err-phone').classList.toggle('show', !phoneValid);
+    document.getElementById('err-branch').classList.toggle('show', !branch);
+
+    if (!name || !phoneValid || !branch) return;
+
+    customerData = { name, phone: phoneClean, branch };
+    saveToSheet(customerData);
+    document.getElementById('tag-name').textContent = "Hi, " + name + "! 👋";
+    showPage('page-review');
+  }
+
+  function saveToSheet(data) {
+    fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: data.name, phone: data.phone, branch: data.branch, status: "submitted" })
+    }).catch(err => console.error('[Sheet] Error:', err));
+  }
+
+  // ── REVIEW ─────────────────────────────────────────
+  function openReview() {
+    if (reviewOpened) return;
+    reviewOpened = true;
+    window.open(GOOGLE_REVIEW_URL, '_blank');
+
+    const btn = document.getElementById('btn-open-review');
+    btn.style.borderColor = 'var(--navy)';
+    btn.style.background = 'var(--navy-light)';
+    document.getElementById('btn-review-label').textContent = '✓ Google Review Opened';
+
+    let elapsed = 0;
+    const hint      = document.getElementById('lock-hint');
+    const prog      = document.getElementById('btn-progress');
+    const doneBtn   = document.getElementById('btn-done');
+    const doneLabel = document.getElementById('btn-done-label');
+
+    hint.textContent = `Please wait ${WAIT_SECONDS} seconds...`;
+    requestAnimationFrame(() => {
+      prog.style.transition = `width ${WAIT_SECONDS}s linear`;
+      prog.style.width = '100%';
+    });
+
+    timerInterval = setInterval(() => {
+      elapsed++;
+      const remaining = WAIT_SECONDS - elapsed;
+      if (remaining > 0) {
+        hint.textContent = `Please wait ${remaining} more seconds...`;
+      } else {
+        clearInterval(timerInterval);
+        doneBtn.disabled = false;
+        doneLabel.textContent = "✅ I've left a review!";
+        hint.textContent = 'Thank you! Tap the button above to continue.';
+        hint.classList.add('unlocked');
+        document.getElementById('sdot-review').className = 'step-dot done';
+        document.getElementById('sline-2').className = 'step-line done';
+        document.getElementById('sdot-confirm').className = 'step-dot active';
+      }
+    }, 1000);
+  }
+
+  function goToConfirm() {
+    if (!reviewOpened) return;
+    document.getElementById('sum-name').textContent   = customerData.name;
+    document.getElementById('sum-phone').textContent  = customerData.phone;
+    document.getElementById('sum-branch').textContent = customerData.branch;
+    showPage('page-confirm');
+  }
+
+  // ── NOTIFY PIC ─────────────────────────────────────
+  function notifyPIC() {
+    const branch = BRANCHES[customerData.branch];
+    if (!branch) { goToThanks(); return; }
+    const msg = encodeURIComponent(
+      `✅ *Google Review Received!*\n\n` +
+      `👤 Name: ${customerData.name}\n` +
+      `📱 Phone: ${customerData.phone}\n` +
+      `🏪 Branch: ${customerData.branch}\n` +
+      `🕐 Time: ${new Date().toLocaleString('en-MY')}\n\n` +
+      `This customer has left a Google Review. Please follow up if needed! 🙏`
+    );
+    window.open(`https://wa.me/${branch.pic}?text=${msg}`, '_blank');
+    setTimeout(goToThanks, 600);
+  }
+
+  function goToThanks() {
+    showPage('page-thanks');
+    setTimeout(showGiftPopup, 800);
+  }
+
+  // ── GIFT ───────────────────────────────────────────
+  function showGiftPopup() {
+    const gift = document.getElementById('gift-trigger');
+    if (gift) gift.classList.add('shake');
+  }
+
+  function explodeGift() {
+    launchConfetti();
+    if (giftOpened) return;
+    giftOpened = true;
+
+    const gift = document.getElementById('gift-trigger');
+    gift.classList.remove('shake');
+    gift.style.fontSize = '0px';
+    gift.style.cursor = 'default';
+    gift.parentElement.style.cursor = 'default';
+    gift.parentElement.onclick = null;
+
+    const bottle = document.createElement('img');
+    bottle.src = 'bottle.png';
+    bottle.alt = 'Floor Cleaner';
+    bottle.className = 'bottle-reveal';
+    bottle.style.cssText = 'width:160px;height:160px;object-fit:contain;display:block;margin:0 auto 12px;';
+    bottle.onerror = function() {
+      this.outerHTML = '<div style="font-size:80px;animation:bounceIn 0.5s ease both;margin-bottom:12px;">🧴</div>';
+    };
+    gift.parentElement.insertBefore(bottle, gift.nextSibling);
+  }
+
+  function launchConfetti() {
+    const container = document.getElementById('confetti-container');
+    const colors = ['#0a1f44','#1a6eb5','#ffd700','#ff6b6b','#51cf66','#fff'];
+    for (let i = 0; i < 80; i++) {
+      setTimeout(() => {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        piece.style.cssText = `
+          left: ${Math.random() * 100}%;
+          background: ${colors[Math.floor(Math.random() * colors.length)]};
+          width: ${6 + Math.random() * 8}px;
+          height: ${6 + Math.random() * 8}px;
+          border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+          animation-duration: ${1.5 + Math.random() * 2}s;
+          animation-delay: ${Math.random() * 0.5}s;
+        `;
+        container.appendChild(piece);
+        setTimeout(() => piece.remove(), 3500);
+      }, i * 20);
+    }
+  }
+</script>
+</body>
+</html>
